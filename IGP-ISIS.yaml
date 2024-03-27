@@ -3,6 +3,7 @@ ISIS Studies:
 1.1.a IS-IS
 1.5.a IS-IS and OSPF extensions
 1.6.a IS-IS segment rouging control plane for IPv4 and IPv6
+5.1.b Routing protocol and LDP authentication and securitys
 
 IOS-XE configuration and tunings (csr1kv 16.9.7):
 
@@ -39,6 +40,7 @@ show isis neighbors (detail) #Verify adjacencies Types/Interfaces/IP Addresses/S
 show isis database (detail) #Verify IP Addresses/Metrics/SR SIDs
 show key chain #Verify key string in quotes(Optional).
 show clns interface #ISIS interface details.
+show isis database  verbose | i Hostname|Metric #Simple view of full topology.
 
 IOS-XE configuration caveats (csr1kv 16.9.7):
 
@@ -46,3 +48,23 @@ IOS-XE configuration caveats (csr1kv 16.9.7):
 #isis-password Old way of authentication without key-chain.
 
 IOS-XR configuration and tunings (xrv9k-full 7.6.1):
+
+router isis 1
+ is-type level-2-only
+ net 49.0000.0000.0000.0002.00
+ log adjacency changes
+ lsp-password hmac-md5 encrypted 14141B180F0B #Authentication for LSPs, CSNPs and PSNPs.
+ address-family ipv4 unicast
+  metric-style wide
+  advertise passive-only
+ !
+ interface Loopback0
+  passive
+  address-family ipv4 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/0
+  point-to-point
+  hello-padding disable
+  hello-password hmac-md5 encrypted 00071A150754 #Authentication for IIHs.
+  address-family ipv4 unicast
