@@ -9,5 +9,58 @@ MVPN Studies:
 2.7 Multicast VPN
 2.7.a NG mVPN (profile 7, 11, 12, 13, 14, 27, 28, and 29)
 
-First a documentation on how to implement Multicast on the core network:
+IOS-XE configuration and tunings (csr1kv 16.9.7):
+
+Profile 0 (Default MDT/GRE/C-PIM):
+#When using ASM groups on the P-PIM no need for MDT address family on BGP because RP is already 
+#signaling the *,G and S,G after the configuration of the default mdt for the VRF.
+
+ip multicast-routing distributed #RP and mroutes will only be signalled by using this.
+ip multicast-routing vrf Cust distributed #RP and mroutes will only be signalled by using this.
+
+interface Loopback0
+ ip address 10.0.0.11 255.255.255.255
+ ip pim sparse-mode #Configure P-PIM on all IGP interfaces.
+
+vrf definition Cust
+ address-family ipv4
+  mdt default 239.1.1.1 #Multicast group of destination for GRE tunnels.
+
+interface GigabitEthernet1
+ vrf forwarding Cust
+ ip pim sparse-mode #C-PIM for Signaling.
+Profile 0 (Default MDT/GRE/C-PIM) with SSM Groups:
+
+ip pim ssm default
+
+vrf definition Cust
+ address-family ipv4
+  mdt default 232.1.1.1 #SSM group for GRE tunnels.
+
+router bgp 65000
+ address-family ipv4 mdt #AFI 1 SAFI 66 needed to build the SPT to the GRE group address.
+ neighbor 10.0.0.1 activate
+
+IOS-XR configuration and tunings (xrv9k-full 7.6.1):
+
+Profile 0 (Default MDT/GRE/C-PIM):
+#When using ASM groups on the P-PIM no need for MDT address family on BGP because RP is already
+#signaling the *,G and S,G after the configuration of the default mdt for the VRF.
+
+ multicast-routing
+ address-family ipv4
+  interface Loopback0 #P-PIM on all IGP interfaces
+   enable
+  !
+ vrf Cust
+  address-family ipv4
+   interface GigabitEthernet0/0/0/0 #C-PIM interface.
+    enable
+   !
+   mdt source Loopback0 #Required on XR.
+   mdt default ipv4 239.1.1.1 #Multicast group of destination for GRE tunnels.
+  !
+ !
+!
+multicast-routing
 

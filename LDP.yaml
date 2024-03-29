@@ -27,6 +27,9 @@ show mpls forwarding #LFIB
 
 IOS-XE configuration caveats (csr1kv 16.9.7):
 
+#When you shut down the Loopback interface having the advertise passive-only in ISIS the LDP-ID changes to the higher IP
+#it does not come back to the Loopback when you turn it on, making the LDP sessions not come UP even having ldp router-id configured.
+#LDP adjacency to IOS-XE works fine but not to other IOS-XE node.
 
 IOS-XR configuration and tunings (xrv9k-full 7.6.1):
 
