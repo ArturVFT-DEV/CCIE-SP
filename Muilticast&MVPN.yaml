@@ -19,7 +19,7 @@ ip multicast-routing distributed #RP and mroutes will only be signalled by using
 ip multicast-routing vrf Cust distributed #RP and mroutes will only be signalled by using this.
 
 interface Loopback0
- ip address 10.0.0.11 255.255.255.255
+ ip address 10.0.0.11 255.255.255.255c
  ip pim sparse-mode #Configure P-PIM on all IGP interfaces.
 
 vrf definition Cust
@@ -40,6 +40,21 @@ vrf definition Cust
 router bgp 65000
  address-family ipv4 mdt #AFI 1 SAFI 66 needed to build the SPT to the GRE group address.
  neighbor 10.0.0.1 activate
+
+Profile 0 (Default MDT/GRE/C-PIM) Data MDT:
+vrf definition Cust
+ address-family ipv4
+  mdt data 232.11.11.0 0.0.0.255 threshold 1
+  mdt data threshold 1 #New form of the threshold command.
+
+###################################################################################################
+
+Profile 1 (Default MDT/mLDP/C-PIM):
+#No need for P-PIM neither BGP MDT SAFI.
+vrf definition Cust
+ vpn id 1:1 #Opaque value needed.
+ address-family ipv4
+  mdt default mpls mldp 10.0.0.1 #Root of the mLDP tree.
 
 IOS-XR configuration and tunings (xrv9k-full 7.6.1):
 
@@ -63,4 +78,53 @@ Profile 0 (Default MDT/GRE/C-PIM):
  !
 !
 multicast-routing
+Profile 0 (Default MDT/GRE/C-PIM) with SSM Groups:
+ multicast-routing
+ vrf Cust
+  address-family ipv4
+     mdt default ipv4 232.1.1.1 #Only change do an SSM range is enough.
 
+router bgp 65000
+ address-family ipv4 mdt #Enable globally.
+  neighbor 10.0.0.2
+    address-family ipv4 mdt #Enable on neighbor.
+
+Profile 0 (Default MDT/GRE/C-PIM) Data MDT:
+multicast-routing
+ vrf Cust
+  address-family ipv4
+     mdt data 232.33.33.0/24 #Default threshold is 1Kbps.
+
+###################################################################################################
+
+Profile 1 (Default MDT/mLDP/C-PIM):
+vrf Cust
+ vpn id 1:1 #Opaque value for mLDP FEC Element
+
+mpls ldp
+ mldp #Enabling mLDP
+  logging notifications
+  address-family ipv4
+
+route-policy rpf
+  set core-tree mldp-default #Set the core-tree so IOS-XR can understand messages coming with mpls encapsulation.
+end-policy
+
+router pim
+ vrf Cust
+  address-family ipv4
+   rpf topology route-policy rpf #Appling the core-tree
+
+multicast-routing
+ address-family ipv4
+  interface Loopback0 #Enabling PIM on LoopBack so it can be used for source of the Lmdt interface.
+   enable
+
+ vrf Cust
+  address-family ipv4
+   mdt source Loopback0
+   mdt default mldp ipv4 10.0.0.1 #Configuration of the root FEC Element.
+
+IOS-XR configuration caveats (xrv9k-full 7.6.1):
+#XRV9K-FULL supports the commands, establishes the C-PIM neighborship using mpls encap, receives the BSR updates but does not forwards traffic.
+#XRV9K-FULL apparently does not support MPLS encap for MVPN. 

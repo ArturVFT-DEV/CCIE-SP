@@ -1,0 +1,75 @@
+Segment Routing Studies:
+
+1.6 Segment routing
+1.6.a IS-IS segment rouging control plane for IPv4 and IPv6
+1.6.b OSPFv2 and OSPRv3 segment routing control plane
+1.6.c BGP SR
+1.6.d SR (SRGB and max label depth)
+1.6.e SR-TE
+1.6.f LDP and SR interworking, segment routing mapping server
+1.6.g PCE and PCEP technology
+1.6.h Flexible algorithm
+1.6.i SRv6 locator
+1.6.j SRv6 micro-segment (uSID)
+1.6.k SRv6 encapsulation functions
+1.6.l SRv6 interworking gateway
+2.3.b Multi-domain segment routing with SR-PCE
+2.3.c SLA based on IGP/TE metrics and disjoint paths
+2.4.d L2VPN service auto steering into segment routing policy
+2.5.f L3VPN service auto steering into segment routing policy
+
+IOS-XE configuration and tunings (csr1kv 16.9.7):
+
+segment-routing mpls
+ !
+ set-attributes
+  address-family ipv4
+   sr-label-preferred #Prefer SR over LDP(default is LDP).
+  exit-address-family
+ !
+ connected-prefix-sid-map
+  address-family ipv4
+   2.2.2.2/32 index 2 range 1 #Set the SID index or absolute value.
+  exit-address-family
+ !
+
+router isis 1
+ metric-style wide #Needs to be configured to exchange TLVs
+ segment-routing mpls #Enables SR on the IGP mandatory.
+
+Mapping-Server:
+
+segment-routing mpls
+ mapping-server
+  !
+  prefix-sid-map
+   address-family ipv4
+    6.6.6.6/32 index 6 range 1 #Index of the LDP only node.
+
+router isis 1
+segment-routing prefix-sid-map advertise-local #Needs this to advertise in the IGP database.
+
+IOS-XR configuration and tunings (xrv9k-full 7.6.1):
+
+router isis 1
+ address-family ipv4 unicast
+  metric-style wide
+  segment-routing mpls sr-prefer #Prefer SR over LDP(default is LDP).
+ !
+ interface Loopback0
+  passive
+  address-family ipv4 unicast
+   prefix-sid index 1 #Set the SID index or absolute value.
+  !
+
+Mapping-Server:
+
+segment-routing
+ mapping-server
+  prefix-sid-map
+   address-family ipv4
+    6.6.6.6/32 6 range 1 #Index of the LDP only node.
+
+router isis 1
+ address-family ipv4 unicast
+  segment-routing prefix-sid-map advertise-local #Needs this to advertise in the IGP database.
