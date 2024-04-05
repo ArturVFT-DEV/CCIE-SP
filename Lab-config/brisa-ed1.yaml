@@ -1,0 +1,21 @@
+hostname brisa-ed1
+
+no ip domain lookup
+
+interface Loopback0
+ ip address 172.16.125.1 255.255.255.255
+ ip ospf 1 area 0
+
+interface GigabitEthernet2
+ ip address 172.16.14.1 255.255.255.0
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+
+router ospf 1
+ router-id 172.16.125.1
+ prefix-suppression
+ passive-interface Loopback0
+ mpls ldp autoconfig
+
+line con 0
+ logging synchronous

@@ -1,0 +1,20 @@
+hostname brisa-pe6
+
+no ip domain lookup
+
+interface Loopback0
+ ip address 172.16.125.6 255.255.255.255
+ ip ospf 1 area 0
+
+interface GigabitEthernet1
+ ip address 172.16.46.6 255.255.255.0
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+
+router ospf 1
+ router-id 172.16.125.6
+ prefix-suppression
+ mpls ldp autoconfig
+
+line con 0
+ logging synchronous

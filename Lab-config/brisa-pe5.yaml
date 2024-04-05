@@ -1,0 +1,21 @@
+hostname brisa-pe5
+
+logging console notifications
+
+interface Loopback0
+ ipv4 address 172.16.125.5 255.255.255.255
+
+interface GigabitEthernet0/0/0/0
+ ipv4 address 172.16.45.5 255.255.255.0
+
+router ospf 1
+ router-id 172.16.125.5
+ area 0
+  mpls ldp auto-config
+  prefix-suppression
+  interface Loopback0
+   passive enable
+  interface GigabitEthernet0/0/0/0
+   network point-to-point
+   
+mpls ldp
