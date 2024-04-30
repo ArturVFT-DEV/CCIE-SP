@@ -1,0 +1,70 @@
+VPWS & VPLS Studies:
+
+2.4.b VPWS, VPLS, and H-VPLS
+
+IOS-XE configuration and tunings (csr1kv 16.9.7):
+
+VPWS variants:
+Older sintax:
+interface GigabitEthernet4 #The config os the attachment circuit and the VPWS itself is all together.
+ service instance 40 ethernet
+  description VPWS
+  encapsulation dot1q 40
+  xconnect 10.0.0.12 40 encapsulation mpls
+
+Newer sintax:
+l2vpn xconnect context VPWS #VPWS configuration isolated from the attachment circuit.
+ member 10.0.0.10 40 encapsulation mpls
+ member GigabitEthernet4 service-instance 40
+
+interface GigabitEthernet4 #Attachment circuit config.
+ service instance 40 ethernet
+  description VPWS
+  encapsulation dot1q 40
+
+VPLS and H-VPLS variants:
+Older sintax:
+l2 vfi H-VPLS manual #This is the older sintax for vfi on a U-PE.
+ vpn id 50
+ bridge-domain 50
+ neighbor 10.0.0.8 encapsulation mpls #Maintaining split horizon towards N-PEs.
+ neighbor 10.0.0.5 encapsulation mpls #Maintaining split horizon towards N-PEs.
+
+interface GigabitEthernet4 #This is the older sintax for attachment circuit on a U-PE .
+ service instance 50 ethernet
+  description H-VPLS
+  encapsulation dot1q 50
+  bridge-domain 50
+
+l2 vfi H-VPLS manual #This is the older sintax for vfi on a N-PE.
+ vpn id 50
+ bridge-domain 50
+ neighbor 10.0.0.10 encapsulation mpls no-split-horizon #Disabling split horizon to the U-PEs.
+ neighbor 10.0.0.12 encapsulation mpls no-split-horizon #Disabling split horizon to the U-PEs.
+ neighbor 10.0.0.5 encapsulation mpls #Maintaining split horizon towards N-PEs.
+
+Newer sintax:
+l2vpn vfi context H-VPLS #Newer sintax for vfi on a U-PE.
+ vpn id 50
+ member 10.0.0.5 encapsulation mpls #Maintaining split horizon towards N-PEs.
+ member 10.0.0.8 encapsulation mpls #Maintaining split horizon towards N-PEs.
+ member vfi H-VPLS
+
+bridge-domain 50 #Newer sintax for bridge-domain on a U-PE.
+ member GigabitEthernet4 service-instance 50
+ member vfi H-VPLS
+
+interface GigabitEthernet4 #Newer sintax for attachment circuit on a U-PE
+ service instance 50 ethernet
+  description H-VPLS
+  encapsulation dot1q 50
+
+l2vpn vfi context H-VPLS #Newer sintax for vfi on a N-PE.
+ vpn id 50
+ member 10.0.0.8 encapsulation mpls #On this sintax this line will have split horizon.
+ member vfi H-VPLS
+
+bridge-domain 50 #Newer sintax for bridge-domain on a N-PE.
+ member vfi H-VPLS
+ member 10.0.0.12 50 encapsulation mpls #On this sintax this line will not have split horizon.
+ member 10.0.0.10 50 encapsulation mpls #On this sintax this line will not have split horizon.

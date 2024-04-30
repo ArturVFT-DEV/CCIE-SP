@@ -1,0 +1,34 @@
+OSPF Studies:
+
+1.1 Interior Gateway Protocol
+1.1.b OSPFv2 and OSPFv3
+1.1.c Optimize IGP scale and performance
+5.1.b Routing protocol and LDP authentication and securitys
+
+IOS-XE configuration and tunings (csr1kv 16.9.7):
+
+router ospf 1
+ router-id 172.16.125.1
+ prefix-suppression #Advertisement of only /32s.
+ passive-interface Loopback0 
+
+interface GigabitEthernet2
+ ip address 172.16.14.1 255.255.255.0
+ ip ospf network point-to-point #Only Router LSAs.
+ ip ospf 1 area 0 #Instace and area definition.
+
+IOS-XE verification commands (csr1kv 16.9.7):
+
+IOS-XE configuration caveats (csr1kv 16.9.7):
+
+IOS-XR configuration and tunings (xrv9k-full 7.6.1):
+
+interface GigabitEthernet0/0/0/1
+ ipv4 address 172.16.24.2 255.255.255.0
+
+router ospf 1
+ router-id 172.16.125.2
+ area 0
+  prefix-suppression #Advertisement of only /32s.
+  interface GigabitEthernet0/0/0/1
+   network point-to-point #Only Router LSAs.

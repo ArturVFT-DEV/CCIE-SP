@@ -2,7 +2,6 @@ ISIS Studies:
 
 1.1.a IS-IS
 1.5.a IS-IS and OSPF extensions
-1.6.a IS-IS segment rouging control plane for IPv4 and IPv6
 5.1.b Routing protocol and LDP authentication and securitys
 
 IOS-XE configuration and tunings (csr1kv 16.9.7):

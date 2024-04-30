@@ -1,5 +1,12 @@
 hostname brisa-ed1
 
+vrf definition SKY-rn
+ rd 172.16.125.1:10
+ address-family ipv4
+  route-target export 172.16.125.1:10
+  route-target import 172.16.125.6:10
+ exit-address-family
+
 no ip domain lookup
 
 interface Loopback0
@@ -8,14 +15,44 @@ interface Loopback0
 
 interface GigabitEthernet2
  ip address 172.16.14.1 255.255.255.0
+ ip ospf authentication message-digest
+ ip ospf message-digest-key 1 md5 cisco
  ip ospf network point-to-point
  ip ospf 1 area 0
+ bfd interval 50 min_rx 50 multiplier 3
+
+interface GigabitEthernet3.10
+ encapsulation dot1Q 10
+ vrf forwarding SKY-rn
+ ip address 10.1.1.1 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf 10 area 0
+
+router ospf 10 vrf SKY-rn
+ domain-id type 0005 value 000000000010
+ redistribute bgp 65000 subnets
 
 router ospf 1
  router-id 172.16.125.1
  prefix-suppression
  passive-interface Loopback0
  mpls ldp autoconfig
+
+router bgp 65000
+ bgp router-id 172.16.125.1
+ bgp log-neighbor-changes
+ no bgp default ipv4-unicast
+ neighbor 172.16.125.3 remote-as 65000
+ neighbor 172.16.125.3 update-source Loopback0
+ address-family ipv4
+ exit-address-family
+ address-family vpnv4
+  neighbor 172.16.125.3 activate
+  neighbor 172.16.125.3 send-community extended
+ exit-address-family
+ address-family ipv4 vrf SKY-rn
+  redistribute ospf 10
+ exit-address-family
 
 line con 0
  logging synchronous
