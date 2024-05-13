@@ -1,0 +1,97 @@
+EVPN Studies:
+
+2.4.c.i EVPN-VPWS
+2.4.c.ii EVPN ELAN
+2.4.c.iii EVPN-IRB
+
+IOS-XE configuration and tunings (csr1kv 16.9.7):
+
+EVPN-VPWS:
+
+EVPN-ELAN:
+l2vpn evpn
+ replication-type ingress #Replication of BUM traffic.
+ mpls label mode per-ce
+ router-id Loopback0
+
+l2vpn evpn instance 70 vlan-based
+ rd 65100:70
+ route-target export 65100:70
+ route-target import 65100:70
+
+interface GigabitEthernet4
+ service instance 70 ethernet
+  encapsulation dot1q 70
+
+interface Port-channel1
+ description EVPN
+ evpn ethernet-segment 70 #Configuration for MultiHoming.
+  identifier type 3 system-mac 7070.7070.7070
+  redundancy all-active
+ service instance 70 ethernet
+  encapsulation dot1q 70
+
+bridge-domain 70 
+ member GigabitEthernet4 service-instance 70
+ member Port-channel1 service-instance 70
+ member evpn-instance 70
+
+router bgp 65100
+ address-family l2vpn evpn
+  neighbor 10.0.0.3 activate
+
+EVPN-IRB:
+l2vpn evpn
+ replication-type ingress #Replication of BUM traffic.
+ mpls label mode per-ce
+ router-id Loopback0
+
+l2vpn evpn instance 80 vlan-based
+ rd 65100:80
+ route-target export 65100:80
+ route-target import 65100:80
+
+interface GigabitEthernet4
+ service instance 80 ethernet
+  encapsulation dot1q 80
+
+bridge-domain 80 
+ member GigabitEthernet4 service-instance 80
+ member evpn-instance 80
+
+vrf definition EVPN-IRB
+ rd 65100:80
+ !
+ address-family ipv4
+  route-target export 65100:80
+  route-target import 65100:80
+
+interface BDI80
+ vrf forwarding EVPN-IRB
+ ip address 100.10.80.1 255.255.255.248
+ encapsulation dot1Q 80
+
+router bgp 65100
+ address-family l2vpn evpn
+  neighbor 10.0.0.3 activate
+ address-family ipv4 vrf EVPN-IRB
+  redistribute connected
+ 
+IOS-XR configuration and tunings (xrv9k-full 7.6.1):
+
+EVPN-VPWS:
+interface GigabitEthernet0/0/0/2.60 l2transport #Layer 2 interface configuration.
+ description EVPN-VPWS
+ encapsulation dot1q 60
+
+l2vpn
+ xconnect group EVPN-VPWS
+  p2p EVPN-VPWS
+   interface GigabitEthernet0/0/0/2.60 #AC configuration
+   neighbor evpn evi 60 target 60 source 60
+
+router bgp 65100
+ address-family l2vpn evpn #Address family to share the Route-Type 1 (AD) with it's extcommunities.
+
+EVPN-ELAN:
+
