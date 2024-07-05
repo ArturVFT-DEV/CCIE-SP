@@ -73,3 +73,71 @@ segment-routing
 router isis 1
  address-family ipv4 unicast
   segment-routing prefix-sid-map advertise-local #Needs this to advertise in the IGP database.
+
+SRTE explicit:
+
+segment-routing
+ traffic-eng
+  segment-list TO6
+   index 10 mpls label 16003
+   index 20 mpls label 24009
+   index 30 mpls label 34
+
+ policy TO6
+   color 30 end-point ipv4 6.6.6.6
+   candidate-paths
+    preference 100
+     explicit segment-list TO6
+
+SRTE on-demand PCE/EPE:
+
+route-policy ODN #Route-policy to set the color.
+  if destination in (22.2.2.2/32) then
+    set extcommunity color BLUE
+  else
+    pass
+  endif
+end-policy
+
+extcommunity-set opaque BLUE
+  10
+end-set
+
+segment-routing
+ traffic-eng
+  on-demand color 10 #Matching the color of the prefix and creating a dynamic path.
+   dynamic
+    pcep
+ pcc #Configuration for pointing the PCEP messages to the PCC.
+  pce address ipv4 7.7.7.7
+
+router bgp 100
+ neighbor 7.7.7.7
+  remote-as 100
+  update-source Loopback0
+  address-family link-state link-state #Advertisement of the link stated DB to the PCC.
+
+ neighbor 10.10.34.4
+  remote-as 200
+  egress-engineering #EPE configurarion.
+
+pce #Configuration on the PCC.
+ address ipv4 7.7.7.7
+!
+
+SRTE disjoint paths:
+
+segment-routing
+ traffic-eng
+  on-demand color 10
+   dynamic
+    pcep
+    !
+    disjoint-path group-id 1 type node #Same group-ids make them try not to utilize the same path.
+   !
+  !
+  on-demand color 20
+   dynamic
+    pcep
+    !
+    disjoint-path group-id 1 type node #If node disjoint is not possible, it falls back to link or best path.

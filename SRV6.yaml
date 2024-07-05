@@ -1,0 +1,42 @@
+SRV6 Studies:
+1.6.i SRv6 locator
+1.6.j SRv6 micro-segment (uSID)
+1.6.k SRv6 encapsulation functions
+1.6.l SRv6 interworking gateway
+
+IOS-XE configuration and tunings (csr1kv 16.9.7):
+
+
+
+IOS-XR configuration and tunings (xrv9k-full 7.6.1):
+
+SRV6 L3VPN:
+segment-routing
+ srv6
+  locators
+   locator SIDBlock
+    prefix fc00:1:0:a1::/64 #First 40 bits must be same in all domain, next 24 node specific.
+!
+router isis 1
+ address-family ipv6 unicast
+  metric-style wide
+  segment-routing srv6
+   locator SIDBlock
+    level 2
+!
+router bgp 65000
+ vrf SRV6 #Must define VRF with RTs.
+  rd 1:1
+  address-family ipv4 unicast
+   segment-routing srv6
+    locator SIDBlock
+    alloc mode per-vrf
+   !      
+   redistribute connected
+
+IOS-XR verification commands (xrv9k-full 7.6.1):
+
+show segment-routing srv6 manager #Verifies the state of the SRV6 and platform capabilities.
+show segment-routing srv6 locator SIDBlock sid #Verifies de allocation of SIDs.
+show bgp vpnv4 unicast local-sids #Shows SIDs allocated do BGP prefixes locally advertised.
+show bgp vpnv4 unicast received-sids #Shows SIDs allocated do BGP prefixes received from peers.
