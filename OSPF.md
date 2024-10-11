@@ -1,9 +1,9 @@
 <h1>Notas OSPF:</h1>
 
-<h2>1.1 Interior Gateway Protocol</h2>
-<h2>1.1.b OSPFv2 and OSPFv3</h2>
-<h2>1.1.c Optimize IGP scale and performance</h2>
-<h2>5.1.b Routing protocol and LDP authentication and securitys</h2>
+<h4>1.1 Interior Gateway Protocol</h4>
+<h4>1.1.b OSPFv2 and OSPFv3</h4>
+<h4>1.1.c Optimize IGP scale and performance</h4>
+<h4>5.1.b Routing protocol and LDP authentication and securitys</h4>
 
 <h1>Conceitos Básicos:</h1>
 
