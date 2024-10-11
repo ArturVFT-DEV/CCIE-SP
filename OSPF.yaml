@@ -9,17 +9,33 @@ IOS-XE configuration and tunings (csr1kv 16.9.7):
 
 router ospf 1
  router-id 172.16.125.1
+ max-lsa 1000 #Maximun number os LSAs the process can handle.
+ prefix-priority high route-map LOOPBACKS
  prefix-suppression #Advertisement of only /32s.
- passive-interface Loopback0 
+ passive-interface Loopback0 #Still need to activate under the interface
+ bfd all-interfaces # Enables BFD on process.
+ area 0 authentication # Type 1 auth
+
+router ospfv3 1
+ !
+ address-family ipv6 unicast
+  passive-interface Loopback0
+ exit-address-family
 
 interface GigabitEthernet2
  ip address 172.16.14.1 255.255.255.0
+ ip ospf authentication message-digest #Authentication type 2.
+ ip ospf authentication-key cisco #Authentication type 1.
+ ip ospf authentication null #Authentication type 0.
+ ip ospf message-digest-key 1 md5 cisco #Algorigthm used and password
  ip ospf network point-to-point #Only Router LSAs.
- ip ospf 1 area 0 #Instace and area definition.
-
-IOS-XE verification commands (csr1kv 16.9.7):
-
-IOS-XE configuration caveats (csr1kv 16.9.7):
+ ip ospf 1 area 0
+ negotiation auto
+ ipv6 enable
+ ipv6 ospf authentication ipsec spi 1040 md5 0123456789ABCDEF0123456789ABCDEF
+ ipv6 ospf 1 area 0
+ ipv6 ospf network point-to-point
+ bfd interval 50 min_rx 50 multiplier 3
 
 IOS-XR configuration and tunings (xrv9k-full 7.6.1):
 
@@ -27,8 +43,19 @@ interface GigabitEthernet0/0/0/1
  ipv4 address 172.16.24.2 255.255.255.0
 
 router ospf 1
- router-id 172.16.125.2
+ router-id 172.16.125.4
+ spf prefix-priority route-policy LOOPBACKS #High priority for convergence.
  area 0
+  bfd minimum-interval 150
+  bfd fast-detect
+  bfd multiplier 3
+  authentication #Type1
   prefix-suppression #Advertisement of only /32s.
-  interface GigabitEthernet0/0/0/1
-   network point-to-point #Only Router LSAs.
+  interface Loopback0
+   passive enable
+  interface GigabitEthernet0/0/0/0
+   authentication null #Type0
+   authentication-key cisco #Type1
+   authentication message-digest #Type2
+   message-digest-key 1 md5 encrypted 0822455D0A16
+   network point-to-point
