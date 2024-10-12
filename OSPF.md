@@ -40,10 +40,10 @@
     - Apenas os melhores são escolhidos para a Tree, se não houve mais entradas na Candidate, encerra o calculo.
 
 <h1>1-3 Tipos de Menssagens:</h1>
-    - Protocolo criado numa época de escassez de recursos computacionais, portanto tem tamanhos fixos de 32-bits.
-    - Para haver extenções é necessário criação de novos LSAs.
+- Protocolo criado numa época de escassez de recursos computacionais, portanto tem tamanhos fixos de 32-bits.
+- Para haver extenções é necessário criação de novos LSAs.
 
-![Cabeçalho OSPF](/Imagens/ospf-header.png)
+    ![Cabeçalho OSPF](/Imagens/ospf-header.png)
 
 <h1>1-4 Tipos de Adjacência:</h1>
 
