@@ -18,7 +18,7 @@
 - **Adjacências:**
     - Troca de informação de RID nos Hellos.
     - Mesma subnet IP. (Existe uma particularidade p-t-p e vl **APPENDIX**).
-    - Descorberta por Multicast 224.0.0.5(AllOSPFRouters) | 224.0.0.6 (AllDRouters).
+    - Descorberta por Multicast 224.0.0.5 (AllOSPFRouters) | 224.0.0.6 (AllDRouters).
     - TTL por padrão 1.
     - IP Protocol 89.
     - Mesma área OSPF.
@@ -26,19 +26,32 @@
     - Tempos de Dead e Hello iguais.
     - IP MTU iguais.
     - Devem concordar se a área é ou não Stub.
+    - Rodando em cima de IP, mais sujeito a ataques exemplo Spoofing.(IRPAS/Nemesis)
 - **Flooding:**
     - Após flooding inicial de um LSA só haverá novos envios em caso de mudança topologica ou LSA expire (30 min).
-    - 
+    - Aging, Sequence Number e Checksum determinam a veracidade do LSA.
 - **Database:**
+    - Apenas uma copia do Header e trocada na fase inicial.
+    - Vizinho solicita todos os LSAs que ele não conhece.
+    - Consistente dentro da área.
 - **Calculo SPF:**
+    - Candidate Database alimenta a Tree.
+    - Cada Roteador se vê como root, alimentando a Candidate com todos os links e custos.
+    - Apenas os melhores são escolhidos para a Tree, se não houve mais entradas na Candidate, encerra o calculo.
 
-<h1>Tipos de Adjacência:</h1>
+<h1>1-3 Tipos de Menssagens:</h1>
+    - Protocolo criado numa época de escassez de recursos computacionais, portanto tem tamanhos fixos de 32-bits.
+    - Para haver extenções é necessário criação de novos LSAs.
+
+![Cabeçalho OSPF](/Imagens/ospf-header.png)
+
+<h1>1-4 Tipos de Adjacência:</h1>
 
 - **Broadcast:** Rede multi acesso, formação de DR e BDR.
 - **Point-to-Point:** Rede ponto a ponto, sem eleição, formação de adjacência mais rápida.
 - **NBMA:** 
 
-<h1>OSPFv2 - IOS-XE configuração básica de vizinhança (csr1kv 16.9.7):</h1>
+<h2>OSPFv2 - IOS-XE configuração básica de vizinhança (csr1kv 16.9.7):</h2>
 
     router ospf 1
      router-id 172.16.125.1
@@ -49,7 +62,7 @@
      bfd all-interfaces # Enables BFD on process.
      area 0 authentication # Type 1 auth
 
-<h1>OSPFv3 - IOS-XE configuração básica de vizinhança (csr1kv 16.9.7):</h1>
+<h2>OSPFv3 - IOS-XE configuração básica de vizinhança (csr1kv 16.9.7):</h2>
 
     router ospfv3 1
      !
@@ -73,7 +86,7 @@
      bfd interval 50 min_rx 50 multiplier 3
 
 
-<h1>OSPFv2 - IOS-XR configuration and tunings (xrv9k-full 7.6.1):</h1>
+<h2>OSPFv2 - IOS-XR configuration and tunings (xrv9k-full 7.6.1):</h2>
 
     interface GigabitEthernet0/0/0/1
      ipv4 address 172.16.24.2 255.255.255.0
