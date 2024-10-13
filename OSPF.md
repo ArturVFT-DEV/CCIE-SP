@@ -15,6 +15,8 @@
 - **IGP Link State:** mantém estado da topologia em uma base de dados.
 - **Identificação:** Todo roteador se identifica e identificas suas redes conectadas para o domínio.
 - **Troca de informações:** Cada roteador recebe uma copia de informação, mantém para si e repassa a mesma ao seu vizinho.
+- **RID e AID:** 32bit doted decimal assim como IPv4, AID pode ser expresso em decimal também. 
+
 - **Adjacências:**
     - Troca de informação de RID nos Hellos.
     - Mesma subnet IP. (Existe uma particularidade p-t-p e vl **APPENDIX**).
@@ -37,19 +39,84 @@
 - **Calculo SPF:**
     - Candidate Database alimenta a Tree.
     - Cada Roteador se vê como root, alimentando a Candidate com todos os links e custos.
-    - Apenas os melhores são escolhidos para a Tree, se não houve mais entradas na Candidate, encerra o calculo.
+    - Apenas os melhores são escolhidos para a Tree, se não houve mais entradas na Candidate, encerra o cálculo.
 
 <h1>1-3 Tipos de Menssagens:</h1>
-- Protocolo criado numa época de escassez de recursos computacionais, portanto tem tamanhos fixos de 32-bits.
+- 5 mensagens diferentes.
+- Tamanhos fixos de 32-bits cabeçalhos.
 - Para haver extenções é necessário criação de novos LSAs.
+- Roteador pode gerar varios LSAs de um mesmo ou vários tipos.
 
-    ![Cabeçalho OSPF](/Imagens/ospf-header.png)
+   ![Cabeçalho OSPF](/Imagens/ospf-header.png)
+
+- **Hello:**
+- **DBD:**
+- **LSR:**
+- **LSU:**
+- **LSAkc:**
 
 <h1>1-4 Tipos de Adjacência:</h1>
 
 - **Broadcast:** Rede multi acesso, formação de DR e BDR.
 - **Point-to-Point:** Rede ponto a ponto, sem eleição, formação de adjacência mais rápida.
 - **NBMA:** 
+
+<h1>1- Segurança:</h1>
+
+- **Autenticação Type0:** Anuncio apenas de host routes /32.
+    - IOS-XE
+    interface GigabitEthernet1
+    ip ospf authentication null
+
+    - IOS-XR
+    router ospf 1
+     area 0
+      interface GigabitEthernet0/0/0/0
+       authentication null
+
+- **Autenticação Type1:** Anuncio apenas de host routes /32.
+    - IOS-XE
+    router ospf 1
+     area 0 authentication
+
+    interface GigabitEthernet1
+    ip ospf authentication null
+
+    - IOS-XR
+    router ospf 1
+     area 0
+      authentication
+      interface GigabitEthernet0/0/0/0
+       authentication-key cisco
+
+<h1>1- Performance e Escalabilidade:</h1>
+
+- **Prefix supression:** Anuncio apenas de host routes /32.
+    - IOS-XE
+    router ospf 1
+     prefix-suppression
+    
+    - IOS-XR
+    router ospf 1
+     area 0
+      prefix-suppression
+
+- **BFD:** Detecção de falhas abaixo de 1 segundo.
+    - IOS-XE
+    router ospf 1
+     bfd all-interfaces
+    
+    interface GigabitEthernet1
+     bfd interval 50 min_rx 50 multiplier 3
+
+    - IOS-XR
+    router ospf 1
+     area 0
+      bfd minimum-interval 150
+      bfd fast-detect
+      bfd multiplier 3
+
+- **BFD:** Detecção de falhas abaixo de 1 segundo.
 
 <h2>OSPFv2 - IOS-XE configuração básica de vizinhança (csr1kv 16.9.7):</h2>
 

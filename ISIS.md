@@ -15,14 +15,39 @@
 - **Identificação:** Todo roteador se identifica e identificas suas redes conectadas para o domínio.
 - **Troca de informações:** Cada roteador recebe uma copia de informação, mantém para si e repassa a mesma ao seu vizinho.
 - **Protocolo OSI**: Não foi originalmente desenhado para redes IP e sim para CLNS
+- **RID e AID:** Expresso atravez do NET, sempre em Hex - AFI, AreaID, SysID e NSEL.
+
 - **Adjacências:**
    - Roda em Layer2 necessitando de acesso ao meio para ataques.
    - Maior dificuldade em priorização de pacotes.
 
 <h1>1-3 Tipos de Menssagens:</h1>
 - Extendido facilmente para novas features apenas com adição de TLVs.
+- Roteador gera apenas dois tipos de LSPs Level1 ou Level2, qualquer outra informação é encapsulada em TLVs.
 
-    ![Cabeçalho ISIS](/Imagens/isis-header.png)
+   ![Cabeçalho ISIS](/Imagens/isis-header.png)
+
+- **IIH:**
+    - Formação de vizinhança.
+    - Keepalive 
+- **CSNP:**
+    - 
+- **PSNP:**
+    - 
+- **LSP:**
+    - 
+
+- **Subdivisão por tipo de adjacência:**
+   - IS-IS subdivide as mensagens em Level1, Level2 e se a mesma é LAN ou PTP de acordo com a adjacência formada:
+      - Level 1 LAN IIH
+      - Level 2 LAN IIH
+      - Point-to-Point IIH
+      - Level 1 CSNP
+      - Level 2 CSNP
+      - Level 1 PSNP
+      - Level 2 PSNP
+      - Level 1 LSP
+      - Level 2 LSP
 
 <h2>IOS-XE configuration and tunings (csr1kv 16.9.7):</h2>
 
