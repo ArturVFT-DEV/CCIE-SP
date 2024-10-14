@@ -66,63 +66,63 @@
 - **Autenticação Type0:** Anuncio apenas de host routes /32.
 - IOS-XE
 
-    interface GigabitEthernet1
-    ip ospf authentication null
+        interface GigabitEthernet1
+         ip ospf authentication null
 
 - IOS-XR
 
-    router ospf 1
-     area 0
-      interface GigabitEthernet0/0/0/0
-       authentication null
+        router ospf 1
+         area 0
+          interface GigabitEthernet0/0/0/0
+           authentication null
 
 - **Autenticação Type1:** Anuncio apenas de host routes /32.
 - IOS-XE
 
-    router ospf 1
-     area 0 authentication
+        router ospf 1
+         area 0 authentication
 
-    interface GigabitEthernet1
-    ip ospf authentication null
+        interface GigabitEthernet1
+         ip ospf authentication null
 
 - IOS-XR
 
-    router ospf 1
-     area 0
-      authentication
-      interface GigabitEthernet0/0/0/0
-       authentication-key cisco
+        router ospf 1
+         area 0
+          authentication
+          interface GigabitEthernet0/0/0/0
+           authentication-key cisco
 
 <h1>1- Performance e Escalabilidade:</h1>
 
 - **Prefix supression:** Anuncio apenas de host routes /32.
 - IOS-XE
 
-    router ospf 1
-     prefix-suppression
+        router ospf 1
+         prefix-suppression
     
 - IOS-XR
 
-    router ospf 1
-     area 0
-      prefix-suppression
+        router ospf 1
+         area 0
+          prefix-suppression
 
 - **BFD:** Detecção de falhas abaixo de 1 segundo.
 - IOS-XE
 
-    router ospf 1
-     bfd all-interfaces
-    
-    interface GigabitEthernet1
-     bfd interval 50 min_rx 50 multiplier 3
+        router ospf 1
+         bfd all-interfaces
+
+        interface GigabitEthernet1
+         bfd interval 50 min_rx 50 multiplier 3
 
 - IOS-XR
 
-    router ospf 1
-     area 0
-      bfd minimum-interval 150
-      bfd fast-detect
-      bfd multiplier 3
+        router ospf 1
+         area 0
+          bfd minimum-interval 150
+          bfd fast-detect
+          bfd multiplier 3
 
 - **BFD:** Detecção de falhas abaixo de 1 segundo.
 
