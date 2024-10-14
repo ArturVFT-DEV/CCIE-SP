@@ -65,6 +65,8 @@
 
 <h2>Autenticação Type0: Sem autenticação. (csr1kv 16.9.7)</h2>
 
+- **Broadcast:**
+
     interface GigabitEthernet1
      ip ospf authentication null
 
