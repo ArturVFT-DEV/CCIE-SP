@@ -63,13 +63,12 @@
 
 <h1>1- Segurança:</h1>
 
-<h5>Autenticação Type0: Sem autenticação.</h5>
-- IOS-XE
+<h2>Autenticação Type0: Sem autenticação. (IOS-XE)</h2>
 
-        interface GigabitEthernet1
-         ip ospf authentication null
+    interface GigabitEthernet1
+     ip ospf authentication null
 
-- IOS-XR
+<h2>Autenticação Type0: Sem autenticação. (IOS-XR)</h2>
 
         router ospf 1
          area 0
