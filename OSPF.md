@@ -63,7 +63,7 @@
 
 <h1>1- Segurança:</h1>
 
-- **Autenticação Type0:** Anuncio apenas de host routes /32.
+<h5>Autenticação Type0: Sem autenticação.</h5>
 - IOS-XE
 
         interface GigabitEthernet1
@@ -76,7 +76,7 @@
           interface GigabitEthernet0/0/0/0
            authentication null
 
-- **Autenticação Type1:** Anuncio apenas de host routes /32.
+<h5>Autenticação Type1: Autenticação por texto claro.</h5>
 - IOS-XE
 
         router ospf 1
@@ -95,7 +95,7 @@
 
 <h1>1- Performance e Escalabilidade:</h1>
 
-- **Prefix supression:** Anuncio apenas de host routes /32.
+<h5>Prefix supression: Anuncio apenas de host routes /32.</h5>
 - IOS-XE
 
         router ospf 1
@@ -103,11 +103,11 @@
     
 - IOS-XR
 
-        router ospf 1
-         area 0
-          prefix-suppression
+    router ospf 1
+     area 0
+      prefix-suppression
 
-- **BFD:** Detecção de falhas abaixo de 1 segundo.
+<h5>BFD: Detecção de falhas abaixo de 1 segundo.</h5>
 - IOS-XE
 
         router ospf 1
