@@ -63,28 +63,27 @@
 
 <h1>1- Segurança:</h1>
 
-<h2>Autenticação Type0: Sem autenticação. (IOS-XE)</h2>
+<h2>Autenticação Type0: Sem autenticação. (csr1kv 16.9.7)</h2>
 
     interface GigabitEthernet1
      ip ospf authentication null
 
-<h2>Autenticação Type0: Sem autenticação. (IOS-XR)</h2>
+<h2>Autenticação Type0: Sem autenticação. (xrv9k-full 7.6.1)</h2>
 
-        router ospf 1
-         area 0
-          interface GigabitEthernet0/0/0/0
-           authentication null
+    router ospf 1
+     area 0
+      interface GigabitEthernet0/0/0/0
+       authentication null
 
-<h5>Autenticação Type1: Autenticação por texto claro.</h5>
-- IOS-XE
+<h2>Autenticação Type1: Autenticação por texto claro. (csr1kv 16.9.7)</h2>
 
-        router ospf 1
-         area 0 authentication
+    router ospf 1
+     area 0 authentication
 
-        interface GigabitEthernet1
-         ip ospf authentication null
+    interface GigabitEthernet1
+     ip ospf authentication null
 
-- IOS-XR
+<h2>Autenticação Type1: Autenticação por texto claro. (xrv9k-full 7.6.1)</h2>
 
         router ospf 1
          area 0
@@ -94,34 +93,32 @@
 
 <h1>1- Performance e Escalabilidade:</h1>
 
-<h5>Prefix supression: Anuncio apenas de host routes /32.</h5>
-- IOS-XE
+<h2>Prefix supression: Anuncio apenas de host routes /32. (csr1kv 16.9.7)</h2>
 
-        router ospf 1
-         prefix-suppression
+    router ospf 1
+     prefix-suppression
     
-- IOS-XR
+<h2>Prefix supression: Anuncio apenas de host routes /32. (xrv9k-full 7.6.1)</h2>
 
     router ospf 1
      area 0
       prefix-suppression
 
-<h5>BFD: Detecção de falhas abaixo de 1 segundo.</h5>
-- IOS-XE
+<h2>BFD: Detecção de falhas abaixo de 1 segundo. (csr1kv 16.9.7)</h2>
 
-        router ospf 1
-         bfd all-interfaces
+    router ospf 1
+     bfd all-interfaces
 
-        interface GigabitEthernet1
-         bfd interval 50 min_rx 50 multiplier 3
+    interface GigabitEthernet1
+     bfd interval 50 min_rx 50 multiplier 3
 
-- IOS-XR
+<h2>BFD: Detecção de falhas abaixo de 1 segundo. (xrv9k-full 7.6.1)</h2>
 
-        router ospf 1
-         area 0
-          bfd minimum-interval 150
-          bfd fast-detect
-          bfd multiplier 3
+    router ospf 1
+     area 0
+      bfd minimum-interval 150
+      bfd fast-detect
+      bfd multiplier 3
 
 - **BFD:** Detecção de falhas abaixo de 1 segundo.
 
