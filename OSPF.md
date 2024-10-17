@@ -91,11 +91,18 @@
       interface GigabitEthernet0/0/0/0
        authentication-key cisco
 
+<h2>IOS-XR TTL Security</h2>
+
+    router ospf 1
+    ttl-security all-interfaces hops 2
+
+<h2>IOS-XR TTL Security</h2>
+
+    router ospf 1
+     area 0
+      security ttl hops 2 
+
 - **TTL Security:** TTL dos pacotes será 255, hops sendo os valores a serem subtraidos.
-
-    - **ttl-security all-interfaces hops** - IOS-XE no processo OSPF.
-    - **security ttl hops** - IOS-XR no processo/área OSPF.
-
 
 <h1>Performance e Escalabilidade:</h1>
 
