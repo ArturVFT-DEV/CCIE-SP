@@ -29,7 +29,8 @@
 
 - **IIH:**
     - Formação de vizinhança.
-    - Keepalive 
+    - Keepalive.
+    - 3 tipos: point-to-point, LAN level1 e LAN level2. 
 - **CSNP:**
     - 
 - **PSNP:**

@@ -8,9 +8,9 @@
 <h4>4.2.a IGP convergence</h4>
 <h4>5.1.b Routing protocol and LDP authentication and securitys</h4>
 
-<h1>1-1 OSPFv2:</h1>
+<h1>OSPFv2:</h1>
 
-<h1>1-2 Conceitos Básicos:</h1>
+<h1>Conceitos Básicos:</h1>
 
 - **IGP Link State:** mantém estado da topologia em uma base de dados.
 - **Identificação:** Todo roteador se identifica e identificas suas redes conectadas para o domínio.
@@ -41,7 +41,7 @@
     - Cada Roteador se vê como root, alimentando a Candidate com todos os links e custos.
     - Apenas os melhores são escolhidos para a Tree, se não houve mais entradas na Candidate, encerra o cálculo.
 
-<h1>1-3 Tipos de Menssagens:</h1>
+<h1>Tipos de Menssagens:</h1>
 - 5 mensagens diferentes.
 - Tamanhos fixos de 32-bits cabeçalhos.
 - Para haver extenções é necessário criação de novos LSAs.
@@ -55,17 +55,15 @@
 - **LSU:**
 - **LSAkc:**
 
-<h1>1-4 Tipos de Adjacência:</h1>
+<h1>Tipos de Adjacência:</h1>
 
 - **Broadcast:** Rede multi acesso, formação de DR e BDR.
 - **Point-to-Point:** Rede ponto a ponto, sem eleição, formação de adjacência mais rápida.
 - **NBMA:** 
 
-<h1>1- Segurança:</h1>
+<h1>Segurança:</h1>
 
 <h2>Autenticação Type0: Sem autenticação. (csr1kv 16.9.7)</h2>
-
-- **Broadcast:**
 
     interface GigabitEthernet1
      ip ospf authentication null
@@ -93,7 +91,7 @@
           interface GigabitEthernet0/0/0/0
            authentication-key cisco
 
-<h1>1- Performance e Escalabilidade:</h1>
+<h1>Performance e Escalabilidade:</h1>
 
 <h2>Prefix supression: Anuncio apenas de host routes /32. (csr1kv 16.9.7)</h2>
 
@@ -184,4 +182,4 @@
 
 <h1>APPENDIX:</h1>
 
-**1-2 Adjacências:** RFC2328 - 10.5 - Unnumbered Point-to-Point e Virtual Links são ignorados em relação a subnet.
+**Adjacências:** RFC2328 - 10.5 - Unnumbered Point-to-Point e Virtual Links são ignorados em relação a subnet.
