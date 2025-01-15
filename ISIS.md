@@ -20,6 +20,10 @@
 - **Adjacências:**
    - Roda em Layer2 necessitando de acesso ao meio para ataques.
    - Maior dificuldade em priorização de pacotes.
+   - Areas diferentes só formam Leve2, Level1 apenas areas iguais.
+   - Down - Enquando não vê IIH.
+   - Initializing - Recebeu um IIH e gravou o MAC.
+   - UP - Quando vê o proprio MAC no IIH vizinho.
 
 <h1>1-3 Tipos de Menssagens:</h1>
 - Extendido facilmente para novas features apenas com adição de TLVs.

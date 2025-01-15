@@ -57,25 +57,42 @@
 
 <h1>Tipos de Adjacência:</h1>
 
-- **Broadcast:** Rede multi acesso, formação de DR e BDR.
-- **Point-to-Point:** Rede ponto a ponto, sem eleição, formação de adjacência mais rápida.
-- **NBMA:** 
+- **Broadcast:** Vizinhança multicast, formação de DR e BDR.
+- **Point-to-Point:** Vizinhança multicast, sem eleição, formação de adjacência mais rápida.
+- **NBMA:** Especificar IP do vizinho, eleição de DR.
+
+<h1>Status de interface:</h1>
+
+- **Down:** Link indisponível, sem envio ou recebimento de menssagens.
+- **Loopback:** Geralmente para manutenções, loop em hardware ou software.
+- **Waiting:** Verificando se existe DR ou BDR.
+- **Point to point:** Vizinho detectado adjacência será iniciada.
+- **DR Other:** Vizinhança operacional, não é DR nem BDR.
+- **Backup:** BDR, sem sincronização de database.
+- **DR:** Vizinhança operacional, sincronização de database realizada.
+
+<h1>Tipos de Áreas:</h1>
+
+- **Backbone e Não Backbone:** Backbone area 0 / Não Backbone qualquer outra.
+- **Stub:** LSA 4 e 5 não permitidos, gera default LSA type 3, "E" bit deve ser igual.
+- **Totally Stubby:** LSA 3, 4 e 5 e  não permitidos, gera default LSA type 3.
+- **Not-So-Stubby:** LSA 7 traduzido para 5 no ABR, gerado por um ASBR na area.
 
 <h1>Segurança:</h1>
 
-<h2>Autenticação Type0: Sem autenticação. (csr1kv 16.9.7)</h2>
+<h2>IOS-XE Autenticação Type0: Sem autenticação.</h2>
 
     interface GigabitEthernet1
      ip ospf authentication null
 
-<h2>Autenticação Type0: Sem autenticação. (xrv9k-full 7.6.1)</h2>
+<h2>IOS-XR Autenticação Type0: Sem autenticação.</h2>
 
     router ospf 1
      area 0
       interface GigabitEthernet0/0/0/0
        authentication null
 
-<h2>Autenticação Type1: Autenticação por texto claro. (csr1kv 16.9.7)</h2>
+<h2>IOS-XE Autenticação Type1: Autenticação por texto claro.</h2>
 
     router ospf 1
      area 0 authentication
@@ -83,7 +100,7 @@
     interface GigabitEthernet1
      ip ospf authentication null
 
-<h2>Autenticação Type1: Autenticação por texto claro. (xrv9k-full 7.6.1)</h2>
+<h2>IOS-XR Autenticação Type1: Autenticação por texto claro.</h2>
 
     router ospf 1
      area 0
@@ -91,33 +108,39 @@
       interface GigabitEthernet0/0/0/0
        authentication-key cisco
 
-<h2>IOS-XR TTL Security</h2>
+<h2>IOS-XR TTL Security no processo e por interface</h2>
 
     router ospf 1
-    ttl-security all-interfaces hops 2
+     ttl-security all-interfaces hops 2
 
-<h2>IOS-XR TTL Security</h2>
+    interface GigabitEthernet1
+     ttl-security hops 2
+
+<h2>IOS-XR TTL Security no processo e por interface</h2>
 
     router ospf 1
      area 0
-      security ttl hops 2 
+      security ttl hops 2
+
+      interface GigabituEthernet 0/0/0/0
+       security ttl hops 2
 
 - **TTL Security:** TTL dos pacotes será 255, hops sendo os valores a serem subtraidos.
 
 <h1>Performance e Escalabilidade:</h1>
 
-<h2>Prefix supression: Anuncio apenas de host routes /32. (csr1kv 16.9.7)</h2>
+<h2>IOS-XE Prefix supression: Anuncio apenas de host routes /32.</h2>
 
     router ospf 1
      prefix-suppression
     
-<h2>Prefix supression: Anuncio apenas de host routes /32. (xrv9k-full 7.6.1)</h2>
+<h2>IOS-XR Prefix supression: Anuncio apenas de host routes /32.</h2>
 
     router ospf 1
      area 0
       prefix-suppression
 
-<h2>BFD: Detecção de falhas abaixo de 1 segundo. (csr1kv 16.9.7)</h2>
+<h2>IOS-XE BFD: Detecção de falhas abaixo de 1 segundo.</h2>
 
     router ospf 1
      bfd all-interfaces
@@ -125,15 +148,13 @@
     interface GigabitEthernet1
      bfd interval 50 min_rx 50 multiplier 3
 
-<h2>BFD: Detecção de falhas abaixo de 1 segundo. (xrv9k-full 7.6.1)</h2>
+<h2>IOS-XR BFD: Detecção de falhas abaixo de 1 segundo.</h2>
 
     router ospf 1
      area 0
       bfd minimum-interval 150
       bfd fast-detect
       bfd multiplier 3
-
-- **BFD:** Detecção de falhas abaixo de 1 segundo.
 
 <h2>OSPFv2 - IOS-XE configuração básica de vizinhança (csr1kv 16.9.7):</h2>
 

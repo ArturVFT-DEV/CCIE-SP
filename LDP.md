@@ -11,15 +11,40 @@
 
 <h1>Performance e Escalabilidade:</h1>
 
-<h2>IOS-XE IGP synch: Evitar caminhos sem labels em convergências.</h2>
+<h2>IOS-XE IGP synch</h2>
 
     router ospf 1
      mpls ldp sync
 
-<h2>IOS-XR IGP synch: Evitar caminhos sem labels em convergências.</h2>
+<h2>IOS-XR IGP synch</h2>
 
     router ospf 1
       mpls ldp sync
+
+- **IGP Synch:** Aumenta o custo IGP de caminhos unnlabaled.
+
+<h2>IOS-XE Session Protection</h2>
+
+    mpls ldp session protection
+
+<h2>IOS-XR Session Protection</h2>
+    
+    mpls ldp
+     session protection
+
+- **Session Protection:** Targeted Hello para RID, deve ser alcançavel pelo IGP.
+
+<h1>Segurança:</h1>
+
+<h2>IOS-XE TTL propagation</h2>
+
+    no mpls ip propagate-ttl forwarded
+
+<h2>IOS-XR TTL propagation</h2>
+    
+    mpls ip-ttl-propagate disable forwarded
+
+- **TTL propagation:** Não propaga TTL do IP para LDP, núvem LDP invisível para CE.
 
 IOS-XE configuration and tunings (csr1kv 16.9.7):
 
