@@ -57,9 +57,10 @@
 
 <h1>Tipos de Adjacência:</h1>
 
-- **Broadcast:** Vizinhança multicast, formação de DR e BDR.
-- **Point-to-Point:** Vizinhança multicast, sem eleição, formação de adjacência mais rápida.
-- **NBMA:** Especificar IP do vizinho, eleição de DR.
+- **Broadcast:** Vizinhança multicast, formação de DR e BDR, 10s Hello e 40s Dead.
+- **Point-to-Point:** Vizinhança multicast, sem eleição, 10s Hello e 40s Dead.
+- **Point-to-Multipoint:** Vizinhança multicast, sem eleição, 30s Hello e 120s Dead
+- **NBMA:** Vizinhança unicast, especificar IP do neighbor, eleição de DR, 30s Hello e 120s Dead.
 
 <h1>Status de interface:</h1>
 
@@ -78,7 +79,67 @@
 - **Totally Stubby:** LSA 3, 4 e 5 e  não permitidos, gera default LSA type 3.
 - **Not-So-Stubby:** LSA 7 traduzido para 5 no ABR, gerado por um ASBR na area.
 
+<h1>CONFIGURAÇÕES</h1>
+
+<h1>Tipos de Adjacência:</h1>
+
+<h2>IOS-XE Broadcast</h2>
+
+    interface GigabitEthernet1
+     ip router ospf 1 area 0
+
+<h2>IOS-XR Broadcast</h2>
+
+    router ospf 1
+     area 0
+      interface GigabitEthernet0/0/0/0
+
+<h2>IOS-XE Point-to-Point</h2>
+
+    interface GigabitEthernet1
+     ip router ospf 1 area 0
+     network point-to-point
+
+<h2>IOS-XR Point-to-Point</h2>
+
+    router ospf 1
+     area 0
+      interface GigabitEthernet0/0/0/0
+       network point-to-point
+
+<h2>IOS-XE Point-to-Multipoint</h2>
+
+    interface GigabitEthernet1
+     ip router ospf 1 area 0
+     network point-to-multipoint
+
+<h2>IOS-XR Point-to-Multipoint</h2>
+
+    router ospf 1
+     area 0
+      interface GigabitEthernet0/0/0/0
+       network point-to-multipoint
+
+<h2>IOS-XE Non-Broadcast</h2>
+
+    interface GigabitEthernet1
+     ip router ospf 1 area 0
+     network non-broadcast
+
+    router ospf 1
+     neighbor 10.0.0.1
+
+<h2>IOS-XR Non-Broadcast</h2>
+
+    router ospf 1
+     area 0
+      interface GigabitEthernet0/0/0/0
+       network non-broadcast
+       neighbor 10.0.0.2
+
 <h1>Segurança:</h1>
+
+<h1>Autenticação</h1>
 
 <h2>IOS-XE Autenticação Type0: Sem autenticação.</h2>
 
@@ -107,6 +168,27 @@
       authentication
       interface GigabitEthernet0/0/0/0
        authentication-key cisco
+
+<h2>IOS-XE Autenticação Type2: Autenticação com encriptação.</h2>
+
+    router ospf 1
+     ip ospf authentication message-digest
+     ip ospf message-digest-key 1 md5 cisco
+
+    interface GigabitEthernet1
+     ip ospf authentication message-digest
+     ip ospf message-digest-key 1 md5 cisco
+
+<h2>IOS-XR Autenticação Type2: Autenticação com encriptação.</h2>
+
+    router ospf 1
+     area 0
+      authentication
+      interface GigabitEthernet0/0/0/0
+       authentication message-digest
+       message-digest-key 1 md5 encrypted cisco
+
+<h1>TTL Security</h1>
 
 <h2>IOS-XR TTL Security no processo e por interface</h2>
 
