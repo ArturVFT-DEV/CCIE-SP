@@ -40,6 +40,9 @@
     - Candidate Database alimenta a Tree.
     - Cada Roteador se vê como root, alimentando a Candidate com todos os links e custos.
     - Apenas os melhores são escolhidos para a Tree, se não houve mais entradas na Candidate, encerra o cálculo.
+- **Seleção de caminhos:**
+    - Versões atuais de IOS obedecem a RFC3101.
+    - O > O Ia > N1 > E1 > N2 > E2
 
 <h1>Tipos de Menssagens:</h1>
 - 5 mensagens diferentes.
@@ -249,30 +252,6 @@
      bfd all-interfaces # Enables BFD on process.
      area 0 authentication # Type 1 auth
 
-<h2>OSPFv3 - IOS-XE configuração básica de vizinhança (csr1kv 16.9.7):</h2>
-
-    router ospfv3 1
-     !
-     address-family ipv6 unicast
-      passive-interface Loopback0
-     exit-address-family
-
-    interface GigabitEthernet2
-     ip address 172.16.14.1 255.255.255.0
-     ip ospf authentication message-digest #Authentication type 2.
-     ip ospf authentication-key cisco #Authentication type 1.
-     ip ospf authentication null #Authentication type 0.
-     ip ospf message-digest-key 1 md5 cisco #Algorigthm used and password
-     ip ospf network point-to-point #Only Router LSAs.
-     ip ospf 1 area 0
-     negotiation auto
-     ipv6 enable
-     ipv6 ospf authentication ipsec spi 1040 md5 0123456789ABCDEF0123456789ABCDEF
-     ipv6 ospf 1 area 0
-     ipv6 ospf network point-to-point
-     bfd interval 50 min_rx 50 multiplier 3
-
-
 <h2>OSPFv2 - IOS-XR configuration and tunings (xrv9k-full 7.6.1):</h2>
 
     interface GigabitEthernet0/0/0/1
@@ -295,6 +274,35 @@
        authentication message-digest #Type2
        message-digest-key 1 md5 encrypted 0822455D0A16
        network point-to-point
+
+<h1>OSPFv3:</h1>
+
+- **IOS-XR IPv4:** IOS-XR suporta apenas a address family ipv6.
+- **IOS-XE IPv4 e IPv6:** IOS-XE suporta ambas as address families.
+
+
+<h2>OSPFv3 - IOS-XE configuração básica de vizinhança (csr1kv 16.9.7):</h2>
+
+    router ospfv3 1
+     !
+     address-family ipv6 unicast
+      passive-interface Loopback0
+     exit-address-family
+
+    interface GigabitEthernet2
+     ip address 172.16.14.1 255.255.255.0
+     ip ospf authentication message-digest #Authentication type 2.
+     ip ospf authentication-key cisco #Authentication type 1.
+     ip ospf authentication null #Authentication type 0.
+     ip ospf message-digest-key 1 md5 cisco #Algorigthm used and password
+     ip ospf network point-to-point #Only Router LSAs.
+     ip ospf 1 area 0
+     negotiation auto
+     ipv6 enable
+     ipv6 ospf authentication ipsec spi 1040 md5 0123456789ABCDEF0123456789ABCDEF
+     ipv6 ospf 1 area 0
+     ipv6 ospf network point-to-point
+     bfd interval 50 min_rx 50 multiplier 3
 
 <h1>APPENDIX:</h1>
 
