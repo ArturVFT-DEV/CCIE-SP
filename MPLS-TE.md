@@ -1,15 +1,15 @@
-MPLS-TE Studies:
+<h1>MPLS-TE Studies:</h1>
 
-1.5 MPLS traffic engineering
-1.5.a IS-IS and OSPF extensions
-1.5.b RSVP-TE
-1.5.c MPLS TE policy enforcement
-1.5.d MPLS LSP attributes
-1.5.e Optimize MPLS TE scale and performance
-2.8.e MPLS TE QoS (MAM, RDM and PBTS)
-4.2.f MPLS TE FRR
+<h4>1.5 MPLS traffic engineering</h4>
+<h4>1.5.a IS-IS and OSPF extensions</h4>
+<h4>1.5.b RSVP-TE</h4>
+<h4>1.5.c MPLS TE policy enforcement</h4>
+<h4>1.5.d MPLS LSP attributes</h4>
+<h4>1.5.e Optimize MPLS TE scale and performance</h4>
+<h4>2.8.e MPLS TE QoS (MAM, RDM and PBTS)</h4>
+<h4>4.2.f MPLS TE FRR</h4>
 
-IOS-XE configuration and tunings (csr1kv 16.9.7):
+<h1>IOS-XE configuration and tunings (csr1kv 16.9.7):</h1>
 
 mpls traffic-eng tunnels #Enable global command for TE.
 
@@ -47,6 +47,11 @@ router ospf 1
 
 mpls traffic-eng
  interface GigabitEthernet0/0/0/0 #Enable TE per IGP interface.
+ ds-te mode ietf
+ ds-te bc-model mam
+ ds-te te-classes
+  te-class 0 class-type 0 priority 0
+  te-class 1 class-type 1 priority 0
 
 mpls ldp #Needs to be enabled if using a VPN service on top of the TE, an L3VPN vrf will add no out label and will not work.
 
