@@ -20,8 +20,10 @@
      prefix-suppression
 
   <b>IOS XR</b>
+
     router ospf 1
      prefix-suppression
+
 </details>
 
 <details>
@@ -32,8 +34,10 @@
      ip ospf network point-to-point
 
   <b>IOS XR</b>
+
     router ospf 1
      area 0
       interface G0/0/0/0
        network point-to-point
+       
 </details>
