@@ -16,22 +16,6 @@
 - **Identificação:** Todo roteador se identifica e identificas suas redes conectadas para o domínio.
 - **Troca de informações:** Cada roteador recebe uma copia de informação, mantém para si e repassa a mesma ao seu vizinho.
 - **RID e AID:** 32bit doted decimal assim como IPv4, AID pode ser expresso em decimal também. 
-
-- **Adjacências:**
-    - Troca de informação de RID nos Hellos.
-    - Mesma subnet IP. (Existe uma particularidade p-t-p e vl **APPENDIX**).
-    - Descorberta por Multicast 224.0.0.5 (AllOSPFRouters) | 224.0.0.6 (AllDRouters).
-    - TTL por padrão 1.
-    - IP Protocol 89.
-    - Mesma área OSPF.
-    - Typo e string de autenticação iguais, Type 0 null, Type 1 clear, Type 2 md5/sha1.
-    - Tempos de Dead e Hello iguais.
-    - IP MTU iguais.
-    - Devem concordar se a área é ou não Stub.
-    - Rodando em cima de IP, mais sujeito a ataques exemplo Spoofing.(IRPAS/Nemesis)
-- **Flooding:**
-    - Após flooding inicial de um LSA só haverá novos envios em caso de mudança topologica ou LSA expire (30 min).
-    - Aging, Sequence Number e Checksum determinam a veracidade do LSA.
 - **Database:**
     - Apenas uma copia do Header e trocada na fase inicial.
     - Vizinho solicita todos os LSAs que ele não conhece.
@@ -49,18 +33,38 @@
 
    ![Cabeçalho OSPF](/Imagens/ospf-header.png)
 
-- **Hello:**
-- **DBD:**
-- **LSR:**
-- **LSU:**
-- **LSAkc:**
+- **Hello:** Formação de vizinhança e manutenção da mesma.
+- **DBD:** Troca de informação inicial entre vizinhos para sincronização de databases.
+- **LSR:** Requisição de um LSA perdido ou desatualizado.
+- **LSU:** Anuncio de um LSA criado por um novo link descoberto, renovação ou remoção.
+- **LSAkc:** Confirmação do recebimento dos Updates.
+
+- **Flooding:**
+    - Após flooding inicial de um LSA só haverá novos envios em caso de mudança topologica ou LSA expire (30 min).
+    - Aging, Sequence Number e Checksum determinam a veracidade do LSA.
+    - LSAs possuem tamanhos diferentes dependendo do Type.
+    - Redistribuir uma interface consome mais memoria mas consome menos CPU em calculo de SPF por ser um Type-5, por outro lado torna-la passive vai consumir menos memoria porem terá calculo de SPF para qualquer mudança na topologia por gerar um Type-1.
 
 <h1>Tipos de Adjacência:</h1>
 
 - **Broadcast:** Vizinhança multicast, formação de DR e BDR, 10s Hello e 40s Dead.
 - **Point-to-Point:** Vizinhança multicast, sem eleição, 10s Hello e 40s Dead.
 - **Point-to-Multipoint:** Vizinhança multicast, sem eleição, 30s Hello e 120s Dead
-- **NBMA:** Vizinhança unicast, especificar IP do neighbor, eleição de DR, 30s Hello e 120s Dead.
+- **NBMA:** Vizinhança unicast, especificar IP do neighbor, eleição de DR, 30s Hello e 120s 
+Dead.
+
+- **Adjacências:**
+    - Troca de informação de RID nos Hellos.
+    - Mesma subnet IP. (Existe uma particularidade p-t-p e vl **APPENDIX**).
+    - Descorberta por Multicast 224.0.0.5 (AllOSPFRouters) | 224.0.0.6 (AllDRouters).
+    - TTL por padrão 1.
+    - IP Protocol 89.
+    - Mesma área OSPF.
+    - Typo e string de autenticação iguais, Type 0 null, Type 1 clear, Type 2 md5/sha1.
+    - Tempos de Dead e Hello iguais.
+    - IP MTU iguais.
+    - Devem concordar se a área é ou não Stub.
+    - Rodando em cima de IP, mais sujeito a ataques exemplo Spoofing.(IRPAS/Nemesis)
 
 <h1>Status de interface:</h1>
 
@@ -79,7 +83,7 @@
 - **Totally Stubby:** LSA 3, 4 e 5 e  não permitidos, gera default LSA type 3.
 - **Not-So-Stubby:** LSA 7 traduzido para 5 no ABR, gerado por um ASBR na area.
 
-<h1>CONFIGURAÇÕES</h1>
+<h1>Configurações Especificas</h1>
 
 <h1>Tipos de Adjacência:</h1>
 
