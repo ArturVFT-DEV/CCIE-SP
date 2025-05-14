@@ -1,10 +1,8 @@
-<h1>OSPF</h1>
-
-<h2>Supressão de redes</h2>
+<h1>OSPFv2</h1>
 
    ![igp](/Imagens/igp.png)
 
-- **Configurações iniciais:** Copie as configurações de /configs/igp/ospf de cada equipamento e cole no respectivo R1-6.
+- **Configurações iniciais:** Copie as configurações de /configs/igp/ospfv2 de cada equipamento e cole no respectivo R1-6.
 
 <h3>LAB TAKS</h3>
 
@@ -39,5 +37,5 @@
      area 0
       interface G0/0/0/0
        network point-to-point
-       
+
 </details>
