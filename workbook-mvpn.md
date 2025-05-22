@@ -103,12 +103,12 @@
   - **Explicação: Nesse momento o trafego Multicast já estará sendo encapsulado em GRE pelo core da operadora para alcançar CE7, é possível visualizar nas imagens abaixo primeiramente a ida do pacote do ponto de vista do R6 vindo do R3(nesse momento o melhor caminho) o pacote está encapsulado em GRE onde a origem é 10.0.255.3 e o destino é o grupo Default MDT 239.10.20.30, dentro do tunel GRE o pacote IP orginal possui a origem 172.16.255.4 e destino 239.1.2.3. Outro ponto importante de se notar é que a volta do pacote ocorre em unicast como se trata de um ping, então o mesmo retorna pelo L3VPN é possível observar pela imposição de label da VPN que o R6 faz para entregar a R3 no meu caso o label 24013 corresponde ao prefixo vpnv4 172.16.255.4/32**
 
   <h3>Trafego indo para CE7</h3>
-  
-     ![request](/Imagens/profile0-R7-request.png)
+
+    ![request](/Imagens/profile0-R7-request.png)
 
   <h3>Trafego voltando para CE4</h3>
 
-     ![reply](/Imagens/profile0-R7-reply.png)
+    ![reply](/Imagens/profile0-R7-reply.png)
 
 </details>
 
