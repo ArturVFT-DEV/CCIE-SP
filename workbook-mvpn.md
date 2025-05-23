@@ -33,8 +33,6 @@
     multicast-routing
      address-family ipv4
       interface all enable
-     !
-    !
 
   - **Explicação: P-PIM tem que estar habilitado em todas as interfaces de core.**
 
@@ -114,20 +112,60 @@
 
 <details>
   <summary><i>Task 6 RESPOSTA</i></summary>
-  <b>IOS XE - R1 and R6</b>
-    
-    vrf definition MVPN-CUST
-     address-family ipv4
-      mdt default 239.10.20.30
+  <b>IOS XE - R1</b>
 
-  <b>IOS XR - R3 and R5</b>
+    router bgp 65000
+     address-family ipv4 mdt
+      neighbor 10.0.255.2 activate
+      neighbor 10.0.255.3 activate
+      neighbor 10.0.255.5 activate
+      neighbor 10.0.255.6 activate
+
+  <b>IOS XE - R2 e R6</b>
+
+    router bgp 65000
+    address-family ipv4 mdt 
+      neighbor 10.0.255.1 activate
+      neighbor 10.0.255.4 activate
+    
+    ip pim ssm deafult
+    vrf definition MVPN-CUS
+     address-family ipv4
+      no  mdt default 239.10.20.30
+      mdt default 232.10.20.30
+    
+  <b>IOS XR - R4</b>
+
+    router bgp 65000
+     address-family ipv4 mdt
+     neighbor 10.0.255.2
+      address-family ipv4 mdt
+       route-reflector-client
+     neighbor 10.0.255.3
+      address-family ipv4 mdt
+       route-reflector-client
+     neighbor 10.0.255.5
+      address-family ipv4 mdt
+       route-reflector-client
+     neighbor 10.0.255.6
+      address-family ipv4 mdt
+       route-reflector-client
+
+  <b>IOS XR - R3 e R5</b>
+
+    router bgp 65000
+     address-family ipv4 mdt
+     neighbor 10.0.255.1
+      address-family ipv4 mdt
+     neighbor 10.0.255.4
+      address-family ipv4 mdt
     
     multicast-routing
      vrf MVPN-CUST
       address-family ipv4
-       mdt source Loopback0
-       mdt default ipv4 239.10.20.30
+       no mdt default ipv4 239.10.20.30
+       mdt default ipv4 232.10.20.30
 
-  - **Explicação: Definição do grupo Default MDT, esse será responsável por formar tuneis GRE Multiponto, o trafego multicast do cliente será encapsulado nesses tuneis para alcançar membros do grupo atravez do core da operadora.**
+  - **Explicação: Para grupos SSM 232.0.0.0/8 é necessário utilizar familia MDT do BGP para propagação de Source/Group entre os PEs, na documentação Cisco essa configuração é necessária até mesmo para ASM, mas funciona mesmo sem estas configurações. Dessa forma existirá menos manutenção de estado nos P's de toda a rede sejá de *,G ou S,G não existirá mais a necessidade de RP e por fim o Source não será mais aprendido via Dataplane e sim via Controlplane BGP**
 
 </details>
