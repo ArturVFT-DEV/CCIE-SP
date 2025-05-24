@@ -14,9 +14,10 @@
 - **Task 1. Habilite roteamento multicast e pim na operadora R1-6**
 - **Task 2. Configure R1 como P-RP**
 - **Task 3. CE4 é o Souce Multicast, realize um ping para o grupo 239.1.2.3, nesse momento CE7 ainda não recebe tráfego**
-- **Task 4. Utilize Default MDT (Profile 0) para resolver a transitividade no backbone da operadora R2,3,5 e 6**
+- **Task 4. Utilize Default MDT (Profile 0) 239.10.20.30 para resolver a transitividade no backbone da operadora R2,3,5 e 6**
 - **Task 5. CE7 nesse momento já deve conseguir receber tráfego multicast do source CE4 para o grupo 239.1.2.3**
-- **Task 6. Profile0 já funciona nas configurações atuais, mas por recomendação da Cisco é necessário configurar BGP com "address-family mdt" entre os PE's**
+- **Task 6. Profile0 já funciona nas configurações atuais, mas por recomendação da Cisco é necessário configurar BGP com "address-family mdt" entre os PE's utilize SSM na Default MDT 232.10.20.30**
+- **Task 7. Configure Data MDT 232.rtr.rtr.rtr exemplo R1 232.1.1.1 Utilize 2Kbps com threshould e valide a comutação no IOS-XE desligando a interface entre R3 e CE5 pois o XRv não consegue identificar o threshould em dataplane para comutar para a Data MDT**
 
 <details>
   <summary><i>Task 1 RESPOSTA</i></summary>
@@ -167,5 +168,33 @@
        mdt default ipv4 232.10.20.30
 
   - **Explicação: Para grupos SSM 232.0.0.0/8 é necessário utilizar familia MDT do BGP para propagação de Source/Group entre os PEs, na documentação Cisco essa configuração é necessária até mesmo para ASM, mas funciona mesmo sem estas configurações. Dessa forma existirá menos manutenção de estado nos P's de toda a rede sejá de *,G ou S,G não existirá mais a necessidade de RP e por fim o Source não será mais aprendido via Dataplane e sim via Controlplane BGP**
+
+</details>
+
+<details>
+  <summary><i>Task 7 RESPOSTA</i></summary>
+  <b>IOS XE - R2 e R6</b>
+    
+    vrf definition MVPN-CUST
+     address-family ipv4
+      mdt data 232.2.2.0 0.0.0.255 threshold 2
+
+    vrf definition MVPN-CUST
+     address-family ipv4
+      mdt data 232.6.6.0 0.0.0.255 threshold 2
+
+  <b>IOS XR - R3 e R5</b>
+    
+    multicast-routing
+     vrf MVPN-CUST
+      address-family ipv4
+       mdt data 239.3.3.0/24 threshold 2
+
+    multicast-routing
+     vrf MVPN-CUST
+      address-family ipv4
+       mdt data 239.5.5.0/24 threshold 2
+
+  - **Explicação: Com essa configuração os PE's vão identificar em dataplane o momento que o trafego multicast da VRF ultrapassar o threshould estarão sinalizando o grupo multicast da Data MDT que deve ser usado pelos PE's interessados naquele trafego, após a virada, apenas os PE's que possuem receivers daquele C-Group farão parte da Data MDT**
 
 </details>
