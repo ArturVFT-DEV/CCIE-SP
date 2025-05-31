@@ -197,4 +197,20 @@
 
   - **Explicação: Com essa configuração os PE's vão identificar em dataplane o momento que o trafego multicast da VRF ultrapassar o threshould estarão sinalizando o grupo multicast da Data MDT que deve ser usado pelos PE's interessados naquele trafego, após a virada, apenas os PE's que possuem receivers daquele C-Group farão parte da Data MDT**
 
+  <h3>Trafego de R2 para R5 ainda não atingindo o threshould</h3>
+
+  ![default-mdt-r5](/Imagens/default-mdt-r5.png)
+
+  <h3>Trafego de R2 para R5 após o threshould ser ultrapassado e R2 sinalizar o Data MDT</h3>
+
+  ![data-mdt-r5](/Imagens/data-mdt-r5.png)
+
+  <h3>Criação da S,G para o Data MDT em R2</h3>
+
+  ![data-mdt-r2](/Imagens/data-mdt-r2.png)
+
+  <h3>Envio do grupo Data MDT a partir R2 quando ultrapassado o threshould</h3>
+
+  ![r2-send](/Imagens/r2-send.png)
+
 </details>
